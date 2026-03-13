@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Sign Up — FitLife{% endblock %}
+
+{% block content %}
+<section class="auth">
+  <div class="auth-card wide reveal">
+    <h2>Create Account</h2>
+    <p class="muted">Choose your role. Coaches need approval.</p>
+
+    <form method="POST" class="form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+      <div class="role-grid" role="radiogroup" aria-label="Select role">
+        <label class="role-card" data-role="Student">
+          <input type="radio" name="role" value="Student" required>
+          <div class="role-top">
+            <div class="role-badge">Student</div>
+            <div class="role-title">Track workouts</div>
+          </div>
+          <p>Log training sessions, calories, and minutes.</p>
+        </label>
+
+        <label class="role-card" data-role="Coach">
+          <input type="radio" name="role" value="Coach">
+          <div class="role-top">
+            <div class="role-badge">Coach</div>
+            <div class="role-title">Manage athletes</div>
+          </div>
+          <p>View your team’s student stats and workout logs.</p>
+        </label>
+      </div>
+
+      <div class="grid-2">
+        <label>
+          <span>Username</span>
+          <input name="username" minlength="3" maxlength="24" placeholder="pick a username" required>
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input name="email" type="email" placeholder="you@example.com" required>
+        </label>
+      </div>
+
+      <label>
+        <span>Password</span>
+        <input name="password" type="password" minlength="8" placeholder="at least 8 characters" required>
+      </label>
+
+      <label>
+        <span>Team</span>
+        <select name="team_id">
+          <option value="">No team</option>
+          {% for t in teams %}
+            <option value="{{ t['id'] }}">{{ t['name'] }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <button class="btn w-full big" type="submit">Create Account</button>
+      <p class="muted">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    </form>
+  </div>
+</section>
+{% endblock %}

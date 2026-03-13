@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Login — FitLife{% endblock %}
+
+{% block content %}
+<section class="auth">
+  <div class="auth-card reveal">
+    <h2>Login</h2>
+    <p class="muted">Use your username or email.</p>
+
+    <form method="POST" class="form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+      <label>
+        <span>Username or Email</span>
+        <input name="identifier" autocomplete="username" placeholder="e.g. tulsi or tulsi@email.com" required>
+      </label>
+
+      <label>
+        <span>Password</span>
+        <input type="password" name="password" autocomplete="current-password" placeholder="••••••••" required>
+      </label>
+
+      <label class="check">
+        <input type="checkbox" name="remember">
+        <span>Keep me logged in</span>
+      </label>
+
+      <button class="btn w-full" type="submit">Login</button>
+    </form>
+
+    <p class="muted">No account? <a href="{{ url_for('signup') }}">Create one</a></p>
+    <p class="muted tiny">Admin demo: visit <code>/dev/create_admin</code> once, then login with <code>admin / admin12345</code>.</p>
+  </div>
+</section>
+{% endblock %}
