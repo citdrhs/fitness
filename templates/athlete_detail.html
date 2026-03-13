@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Athlete — {{ athlete['username'] }}{% endblock %}
+
+{% block content %}
+<section class="dash">
+  <div class="dash-head reveal">
+    <div>
+      <h2>{{ athlete['username'] }}</h2>
+      <p class="muted">{{ athlete['email'] }}</p>
+    </div>
+    <a class="btn ghost" href="{{ url_for('dashboard') }}">Back</a>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat reveal delay-1">
+      <div class="stat-label">Workouts</div>
+      <div class="stat-value">{{ stats['workout_count'] }}</div>
+    </div>
+    <div class="stat reveal delay-2">
+      <div class="stat-label">Minutes</div>
+      <div class="stat-value">{{ stats['minutes_total'] }}</div>
+    </div>
+    <div class="stat reveal delay-3">
+      <div class="stat-label">Calories</div>
+      <div class="stat-value">{{ stats['calories_total'] }}</div>
+    </div>
+  </div>
+
+  <div class="panel reveal">
+    <div class="panel-head">
+      <h3>Recent workouts</h3>
+      <span class="muted tiny">last 15</span>
+    </div>
+
+    {% if recent %}
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Workout</th>
+              <th>Minutes</th>
+              <th>Calories</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for w in recent %}
+              <tr>
+                <td>{{ w['date'] }}</td>
+                <td>{{ w['workout_type'] }}</td>
+                <td>{{ w['duration_min'] }}</td>
+                <td>{{ w['calories'] }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="muted">No workouts logged yet.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

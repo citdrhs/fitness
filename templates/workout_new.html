@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Log Workout — FitLife{% endblock %}
+
+{% block content %}
+<section class="auth">
+  <div class="auth-card reveal">
+    <h2>Log a workout</h2>
+    <p class="muted">Quick entry — keep it simple.</p>
+
+    <form method="POST" class="form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+      <label>
+        <span>Workout type</span>
+        <input name="workout_type" placeholder="Cardio, Legs, Practice, etc." required>
+      </label>
+
+      <div class="grid-2">
+        <label>
+          <span>Date</span>
+          <input type="date" name="date">
+        </label>
+
+        <label>
+          <span>Duration (minutes)</span>
+          <input type="number" name="duration_min" min="0" value="30" required>
+        </label>
+      </div>
+
+      <label>
+        <span>Calories</span>
+        <input type="number" name="calories" min="0" value="200" required>
+      </label>
+
+      <button class="btn w-full" type="submit">Save workout</button>
+      <a class="btn ghost w-full" href="{{ url_for('dashboard') }}">Cancel</a>
+    </form>
+  </div>
+</section>
+{% endblock %}
