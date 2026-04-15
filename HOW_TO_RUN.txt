@@ -13,11 +13,7 @@ STEP 2 — INSTALL REQUIRED PACKAGES
 
 Open a terminal (or VS Code terminal) and run:
 
-    pip install flask flask-sqlalchemy
-
-If you get a greenlet error, also run:
-
-    pip install greenlet --only-binary=:all:
+    pip install flask
 
 If "pip" doesn't work, try "pip3" instead.
 
