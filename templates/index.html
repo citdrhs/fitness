@@ -1,68 +1,270 @@
 {% extends "base.html" %}
-{% block title %}FitLife{% endblock %}
+{% block title %}Deeprun Performance Center{% endblock %}
 
 {% block content %}
+
+<style>
+/* ── Hero ── */
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100vh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5rem 2rem 3rem;
+  background: var(--black);
+}
+
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(26,110,216,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,110,216,0.07) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 20%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 20%, transparent 100%);
+  animation: gridMove 25s linear infinite;
+}
+@keyframes gridMove {
+  to { background-position: 64px 64px; }
+}
+
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(26,110,216,0.16) 0%, transparent 65%);
+  top: 40%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: breathe 5s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,100% { opacity:1; transform:translate(-50%,-50%) scale(1); }
+  50%      { opacity:0.6; transform:translate(-50%,-50%) scale(1.15); }
+}
+
+.hero-content {
+  position: relative; z-index: 2;
+  animation: riseIn 0.8s cubic-bezier(0.4,0,0.2,1) both;
+}
+@keyframes riseIn {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  background: var(--blue-dim); border: 1px solid var(--border-blue);
+  color: var(--blue); padding: 0.38rem 1rem;
+  border-radius: 99px;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 1.6rem;
+}
+.hero-eyebrow .dot {
+  width: 6px; height: 6px; background: var(--blue);
+  border-radius: 50%; animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 11vw, 9rem);
+  line-height: 0.9; text-transform: uppercase;
+  margin-bottom: 1.6rem;
+}
+.hero h1 .top {
+  display: block; color: var(--gray-2);
+  font-size: 0.36em; letter-spacing: 0.28em; margin-bottom: 0.2em;
+}
+.hero h1 .main  { display: block; color: var(--white); }
+.hero h1 .accent {
+  display: block; color: var(--blue);
+  text-shadow: 0 0 80px rgba(26,110,216,0.5);
+}
+
+.hero-sub {
+  max-width: 480px; margin: 0 auto 2.8rem;
+  color: var(--gray-2); font-size: 1rem; line-height: 1.75;
+  animation: riseIn 0.8s 0.12s cubic-bezier(0.4,0,0.2,1) both;
+}
+
+.hero-cta {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  animation: riseIn 0.8s 0.25s cubic-bezier(0.4,0,0.2,1) both;
+}
+
+/* ── Features strip ── */
+.features {
+  position: relative; z-index: 2;
+  display: flex; gap: 0;
+  margin-top: 4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface);
+  animation: riseIn 0.8s 0.4s cubic-bezier(0.4,0,0.2,1) both;
+  max-width: 780px; width: 100%;
+}
+
+.feature {
+  flex: 1; padding: 1.6rem 1.4rem;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 0.6rem;
+  border-right: 1px solid var(--border);
+  transition: background 0.2s ease;
+}
+.feature:last-child { border-right: none; }
+.feature:hover { background: var(--elevated); }
+
+.feature-icon {
+  width: 42px; height: 42px;
+  background: var(--blue-dim); border: 1px solid var(--border-blue);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  margin-bottom: 0.2rem;
+}
+.feature h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--white);
+}
+.feature p {
+  font-size: 0.78rem; color: var(--gray-2); line-height: 1.5;
+}
+
+/* ── Stats bar ── */
+.stats-bar {
+  position: relative; z-index: 2;
+  display: flex; gap: 0;
+  margin-top: 1rem;
+  max-width: 780px; width: 100%;
+  animation: riseIn 0.8s 0.55s cubic-bezier(0.4,0,0.2,1) both;
+}
+.stat-pill {
+  flex: 1; text-align: center; padding: 1rem 0.5rem;
+}
+.stat-pill .num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem; color: var(--blue); line-height: 1;
+  display: block;
+}
+.stat-pill .lbl {
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gray-2); display: block; margin-top: 0.2rem;
+}
+
+/* ── Scroll indicator ── */
+.scroll-hint {
+  position: absolute; bottom: 2rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  color: var(--gray-3); font-size: 0.65rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  z-index: 2;
+  animation: fadeIn 1s 1.2s both;
+}
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.scroll-mouse {
+  width: 18px; height: 28px;
+  border: 1px solid var(--border-mid); border-radius: 99px;
+  display: flex; justify-content: center; padding-top: 5px;
+}
+.scroll-dot {
+  width: 3px; height: 3px; background: var(--blue);
+  border-radius: 50%;
+  animation: scrollDot 1.6s ease-in-out infinite;
+}
+@keyframes scrollDot {
+  0%   { opacity:1; transform:translateY(0); }
+  80%  { opacity:0; transform:translateY(8px); }
+  100% { opacity:0; }
+}
+
+/* mobile */
+@media (max-width: 600px) {
+  .features { flex-direction: column; }
+  .feature  { border-right: none; border-bottom: 1px solid var(--border); }
+  .feature:last-child { border-bottom: none; }
+}
+</style>
+
 <section class="hero">
-  <div class="hero-grid">
-    <div class="hero-copy">
-      <h1 class="reveal">Train smarter. Track everything.</h1>
-      <p class="reveal delay-1">
-        FitLife is a clean coach + athlete dashboard where students log workouts and coaches view team progress.
-      </p>
-      <div class="hero-actions reveal delay-2">
-        {% if current_user %}
-          <a class="btn" href="{{ url_for('dashboard') }}">Go to dashboard</a>
-        {% else %}
-          <a class="btn" href="{{ url_for('signup') }}">Create account</a>
-          <a class="btn ghost" href="{{ url_for('login') }}">Login</a>
-        {% endif %}
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      Glen Allen, Virginia · Wildcats Athletics
+    </div>
+
+    <h1>
+      <span class="top">Deeprun</span>
+      <span class="main">Performance</span>
+      <span class="accent">Center</span>
+    </h1>
+
+    <p class="hero-sub">
+      The official strength &amp; conditioning platform for Deep Run Athletics.
+      Train smarter. Track everything. Stay connected.
+    </p>
+
+    <div class="hero-cta">
+      <a href="{{ url_for('signup') }}" class="btn">Get Started</a>
+      <a href="{{ url_for('login') }}"  class="btn secondary">Sign In</a>
+    </div>
+
+    <!-- Feature cards -->
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">🏋️</div>
+        <h3>Workouts</h3>
+        <p>Coaches assign custom workouts directly to your team</p>
       </div>
-      <div class="mini-stats reveal delay-3">
-        <div class="mini-card">
-          <div class="mini-label">Student</div>
-          <div class="mini-value">Log workouts</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-label">Coach</div>
-          <div class="mini-value">See athletes</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-label">Admin</div>
-          <div class="mini-value">Approve coaches</div>
-        </div>
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <h3>Tracking</h3>
+        <p>Log reps, weight, and time. Watch your progress build</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💬</div>
+        <h3>Comms</h3>
+        <p>Team channels keep coaches and athletes connected</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <h3>Dashboard</h3>
+        <p>See your stats, streaks, and upcoming sessions at a glance</p>
       </div>
     </div>
 
-    <div class="hero-art reveal delay-1" aria-hidden="true">
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
-      <div class="glass-card">
-        <div class="pulse-dot"></div>
-        <div class="glass-title">Today</div>
-        <div class="glass-row"><span>Workouts</span><span>+2</span></div>
-        <div class="glass-row"><span>Minutes</span><span>+75</span></div>
-        <div class="glass-row"><span>Calories</span><span>+520</span></div>
+    <!-- Stats pills -->
+    <div class="stats-bar">
+      <div class="stat-pill">
+        <span class="num">DR</span>
+        <span class="lbl">Wildcats</span>
+      </div>
+      <div class="stat-pill">
+        <span class="num">4+</span>
+        <span class="lbl">Sports Teams</span>
+      </div>
+      <div class="stat-pill">
+        <span class="num">1</span>
+        <span class="lbl">Platform</span>
       </div>
     </div>
   </div>
-</section>
 
-<section class="section">
-  <h2 class="section-title reveal">Built for a real team workflow</h2>
-  <div class="cards">
-    <div class="card reveal delay-1">
-      <h3>Role-based dashboards</h3>
-      <p>Students see personal progress. Coaches see team athletes. Admins approve access requests.</p>
-    </div>
-    <div class="card reveal delay-2">
-      <h3>Secure login</h3>
-      <p>Passwords are hashed, sessions are managed safely, and POST actions use CSRF tokens.</p>
-    </div>
-    <div class="card reveal delay-3">
-      <h3>Fast + simple database</h3>
-      <p>SQLite + indexed tables = quick reads and simple setup for school projects.</p>
-    </div>
+  <div class="scroll-hint">
+    <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+    Scroll
   </div>
 </section>
+
 {% endblock %}

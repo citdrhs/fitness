@@ -1,33 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Profile — FitLife{% endblock %}
+{% block title %}Profile — Deeprun Performance Center{% endblock %}
 
 {% block content %}
-<section class="auth">
-  <div class="auth-card reveal">
-    <h2>Profile</h2>
-    <p class="muted">Update your basic info.</p>
-
-    <div class="profile-box">
-      <div class="row"><span class="muted">Username</span><span>{{ user['username'] }}</span></div>
-      <div class="row"><span class="muted">Email</span><span>{{ user['email'] }}</span></div>
-      <div class="row"><span class="muted">Role</span><span>{{ user['role'] }}</span></div>
+<div class="wrap">
+  <div class="page-head">
+    <div>
+      <h2>Profile</h2>
+      <p>Manage your account information</p>
     </div>
+  </div>
 
-    <form method="POST" class="form">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <div class="profile-header">
+    <h2>{{ username }}</h2>
+    <div class="profile-fields">
+      <div class="pf"><span class="lbl">Name</span><span class="val">{{ username }}</span></div>
+      <div class="pf"><span class="lbl">Email</span><span class="val">{{ email }}</span></div>
+      <div class="pf"><span class="lbl">Age</span><span class="val">{{ age }}</span></div>
+      <div class="pf"><span class="lbl">Goal</span><span class="val">{{ goal }}</span></div>
+    </div>
+  </div>
 
-      <label>
-        <span>Age</span>
-        <input type="number" name="age" min="0" max="120" value="{{ user['age'] if user['age'] is not none else '' }}" placeholder="optional">
-      </label>
-
-      <label>
-        <span>Goal</span>
-        <input name="goal" value="{{ user['goal'] or '' }}" placeholder="e.g. improve endurance, hit PRs">
-      </label>
-
-      <button class="btn w-full" type="submit">Save</button>
+  <div class="profile-update">
+    <h3>Update Info</h3>
+    <form method="POST" action="{{ url_for('profile') }}">
+      <input type="number" name="age"  placeholder="Age"      value="{{ age }}">
+      <input type="text"   name="goal" placeholder="New goal" value="{{ goal }}">
+      <button type="submit" class="btn">Save Changes</button>
     </form>
   </div>
-</section>
+</div>
 {% endblock %}

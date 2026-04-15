@@ -1,0 +1,5 @@
+*OLD TXT FILE: ONLY FOR DOCUMENTATION PURPISES*
+
+
+in text.html I added the link to access the website. There were a few ways I could've done this and I can definetly make changes if you guys want, 
+but just click the link while running test.html for now and you should be good. ALSO, you must be running app.py before using the website

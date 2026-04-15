@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Deeprun Performance Center{% endblock %}
+
+{% block content %}
+<div class="wrap">
+
+{% if session.get('type') == "Student" %}
+
+  <div class="page-head">
+    <div>
+      <h2>Dashboard</h2>
+      <p>Welcome back, {{ session.get('user', 'Athlete') }}</p>
+    </div>
+  </div>
+
+  <div class="stats-container">
+    <div class="stat-card">
+      <h3>Workouts Completed</h3>
+      <p class="blue">{{ workouts }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Calories Burned</h3>
+      <p>{{ calories }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Active Days</h3>
+      <p>0</p>
+    </div>
+  </div>
+
+  <div class="quick-links">
+    <a href="{{ url_for('workout') }}" class="btn">Start Workout</a>
+    <a href="{{ url_for('log') }}" class="btn secondary">Activity Log</a>
+  </div>
+
+{% else %}
+
+  <!-- ADMIN / COACH VIEW -->
+  <div class="page-head">
+    <div>
+      <h2>Coach Dashboard</h2>
+      <p>Assign workouts and manage your teams</p>
+    </div>
+  </div>
+
+  <!-- Add Team -->
+  <div class="add-team-bar">
+    <h2>Add Team</h2>
+    <form method="POST" action="{{ url_for('addteam') }}" style="display:flex;gap:0.75rem;flex:1;flex-wrap:wrap;">
+      <input type="text" name="addedTeam" placeholder="Team name" required style="flex:1;min-width:160px;margin:0;">
+      <button type="submit" class="btn">+ Add</button>
+    </form>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Workout Builder -->
+  <div class="workout-builder">
+    <div class="section-title">Build a Workout</div>
+
+    <div class="builder-grid">
+      <div class="builder-field">
+        <label>Exercise</label>
+        <select name="workoutType" id="workoutType">
+          <option value="Bench Press">Bench Press</option>
+          <option value="Curl-Ups">Curl-Ups</option>
+          <option value="Crunches">Crunches</option>
+          <option value="Dumbbells">Dumbbells</option>
+          <option value="Jog">Jog</option>
+          <option value="Jumping Jacks">Jumping Jacks</option>
+          <option value="Mountain Climbers">Mountain Climbers</option>
+          <option value="Plank">Plank</option>
+          <option value="Squats">Squats</option>
+        </select>
+      </div>
+      <div class="builder-field">
+        <label>Time (min)</label>
+        <input type="text" id="Time" name="Time" placeholder="0">
+      </div>
+      <div class="builder-field">
+        <label>Weight (lbs)</label>
+        <input type="text" id="Weight" name="Weight" placeholder="0">
+      </div>
+      <div class="builder-field">
+        <label>Reps</label>
+        <input type="number" id="Reps" name="Reps" placeholder="0">
+      </div>
+    </div>
+
+    <div class="notes-row">
+      <div class="builder-field" style="flex:1;">
+        <label>Notes</label>
+        <input type="text" id="Notes" name="Notes" placeholder="Any extra notes…">
+      </div>
+      <button type="button" onclick="addWorkout()" class="btn ghost">+ Add Exercise</button>
+    </div>
+
+    <div id="addedWorkouts" class="added-workouts"></div>
+  </div>
+
+  <!-- Teams + Assign -->
+  <form method="POST" action="{{ url_for('sendWorkouts') }}">
+    <div class="teams-section">
+      <div class="section-title">Assign to Athletes</div>
+
+      {% for team in teams_list %}
+      <div class="team-block">
+        <div class="team-block-head">
+          <h3>{{ team }}</h3>
+          <button type="button" onclick="selectAll('{{ team }}')" class="btn secondary" style="font-size:0.72rem;padding:0.35rem 0.8rem;">Select All</button>
+        </div>
+        <div class="athlete-grid">
+          {% for students in students_list %}
+            {% if team in workouts_json[students.id - 1]["teams_on"] %}
+              <label class="athlete-chip">
+                <input type="checkbox" class="{{ team }}" name="{{ team }}" value="{{ students.username }}">
+                {{ students.username }}
+                <span class="status-dot {% if students.status == 'active' %}active{% endif %}"></span>
+              </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Hidden workout inputs are appended here by JS -->
+    <div id="addedWorkoutsHidden"></div>
+
+    <div class="send-row">
+      <button type="submit" class="btn">Send Workouts</button>
+    </div>
+  </form>
+
+{% endif %}
+</div>
+{% endblock %}

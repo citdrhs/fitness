@@ -1,35 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Login — FitLife{% endblock %}
+{% block title %}Sign In — Deeprun Performance Center{% endblock %}
 
 {% block content %}
-<section class="auth">
-  <div class="auth-card reveal">
-    <h2>Login</h2>
-    <p class="muted">Use your username or email.</p>
+<div class="form-container">
+  <h2>Sign <span>In</span></h2>
 
-    <form method="POST" class="form">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  {% if error %}
+    <div class="error-banner">{{ error }}</div>
+  {% endif %}
 
-      <label>
-        <span>Username or Email</span>
-        <input name="identifier" autocomplete="username" placeholder="e.g. tulsi or tulsi@email.com" required>
-      </label>
+  <form method="POST" action="{{ url_for('login') }}">
+    <input type="email"    name="email"    placeholder="Email"    required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button type="submit" class="btn">Sign In</button>
+  </form>
 
-      <label>
-        <span>Password</span>
-        <input type="password" name="password" autocomplete="current-password" placeholder="••••••••" required>
-      </label>
-
-      <label class="check">
-        <input type="checkbox" name="remember">
-        <span>Keep me logged in</span>
-      </label>
-
-      <button class="btn w-full" type="submit">Login</button>
-    </form>
-
-    <p class="muted">No account? <a href="{{ url_for('signup') }}">Create one</a></p>
-    <p class="muted tiny">Admin demo: visit <code>/dev/create_admin</code> once, then login with <code>admin / admin12345</code>.</p>
-  </div>
-</section>
+  <p>No account? <a href="{{ url_for('signup') }}">Create one</a></p>
+</div>
 {% endblock %}

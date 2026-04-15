@@ -1,65 +1,54 @@
 {% extends "base.html" %}
-{% block title %}Sign Up — FitLife{% endblock %}
+{% block title %}Create Account — Deeprun Performance Center{% endblock %}
 
 {% block content %}
-<section class="auth">
-  <div class="auth-card wide reveal">
-    <h2>Create Account</h2>
-    <p class="muted">Choose your role. Coaches need approval.</p>
+<div class="form-container">
+  <h2>Create <span>Account</span></h2>
 
-    <form method="POST" class="form">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  {% if error %}
+    <div class="error-banner">{{ error }}</div>
+  {% endif %}
 
-      <div class="role-grid" role="radiogroup" aria-label="Select role">
-        <label class="role-card" data-role="Student">
-          <input type="radio" name="role" value="Student" required>
-          <div class="role-top">
-            <div class="role-badge">Student</div>
-            <div class="role-title">Track workouts</div>
-          </div>
-          <p>Log training sessions, calories, and minutes.</p>
-        </label>
+  <form method="POST" action="{{ url_for('signup') }}">
 
-        <label class="role-card" data-role="Coach">
-          <input type="radio" name="role" value="Coach">
-          <div class="role-top">
-            <div class="role-badge">Coach</div>
-            <div class="role-title">Manage athletes</div>
-          </div>
-          <p>View your team’s student stats and workout logs.</p>
-        </label>
-      </div>
+    <span class="form-label">I am a…</span>
+    <select name="type" required>
+      <option value="" disabled selected>Select role</option>
+      <option value="Student">Student</option>
+      <option value="Coach">Coach</option>
+    </select>
 
-      <div class="grid-2">
-        <label>
-          <span>Username</span>
-          <input name="username" minlength="3" maxlength="24" placeholder="pick a username" required>
-        </label>
+    <span class="form-label">Team</span>
+    <ul id="teamDropdowns">
+      <select name="team" id="team">
+        <option value="none">None</option>
+        {% for team in teams %}
+          <option value="{{ team }}">{{ team }}</option>
+        {% endfor %}
+      </select>
+    </ul>
+    <button type="button" onclick="addTeamSlot()" class="btn secondary" style="margin-bottom:1rem;font-size:0.75rem;padding:0.4rem 0.9rem;">+ Add Team</button>
 
-        <label>
-          <span>Email</span>
-          <input name="email" type="email" placeholder="you@example.com" required>
-        </label>
-      </div>
+    <input type="text"   name="name"     placeholder="Full Name"     required>
+    <input type="email"  name="email"    placeholder="Email"         required>
+    <input type="password" name="password" placeholder="Password"   required>
+    <input type="number" name="age"      placeholder="Age">
+    <input type="text"   name="goal"     placeholder="Fitness Goal">
 
-      <label>
-        <span>Password</span>
-        <input name="password" type="password" minlength="8" placeholder="at least 8 characters" required>
-      </label>
+    <button type="submit" class="btn">Create Account</button>
+  </form>
 
-      <label>
-        <span>Team</span>
-        <select name="team_id">
-          <option value="">No team</option>
-          {% for t in teams %}
-            <option value="{{ t['id'] }}">{{ t['name'] }}</option>
-          {% endfor %}
-        </select>
-      </label>
+  <p>Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+</div>
 
-      <button class="btn w-full big" type="submit">Create Account</button>
-      <p class="muted">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
-    </form>
-  </div>
-</section>
+<script>
+function addTeamSlot() {
+  var container  = document.getElementById('teamDropdowns');
+  var existing   = container.querySelector('select');
+  if (!existing) return;
+  var clone      = existing.cloneNode(true);
+  clone.value    = 'none';
+  container.appendChild(clone);
+}
+</script>
 {% endblock %}

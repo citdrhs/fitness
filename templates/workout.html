@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Workouts — Deeprun Performance Center{% endblock %}
+
+{% block content %}
+<div class="wrap">
+  <div class="page-head">
+    <div>
+      <h2>Your Workouts</h2>
+      <p>Complete your assigned exercises for today</p>
+    </div>
+  </div>
+
+  {% if workouts_list %}
+    <div class="workout-list">
+      {% for workout in workouts_list %}
+      <div class="workout-card">
+        <h3>{{ workout.workoutType }}</h3>
+
+        {% if workout.time != "" %}
+          <p>Duration: {{ workout.time }} min</p>
+        {% endif %}
+        {% if workout.reps != "" %}
+          <p>Reps: {{ workout.reps }}</p>
+        {% endif %}
+        {% if workout.weight != "" %}
+          <p>Weight: {{ workout.weight }} lbs</p>
+        {% endif %}
+        {% if workout.notes != "" %}
+          <p>Notes: {{ workout.notes }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('completeWorkouts') }}">
+          <button type="submit" class="btn" name="Complete" value="{{ workout }}">
+            Mark Complete
+          </button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <div style="text-align:center;padding:4rem 2rem;color:var(--gray-2);">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.05em;color:var(--gray-3);margin-bottom:0.75rem;">No Workouts Yet</div>
+      <p style="font-size:0.9rem;">Your coach hasn't assigned any workouts. Check back soon.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

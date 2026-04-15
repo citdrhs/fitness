@@ -1,0 +1,33 @@
+HOW TO RUN THE CODE:
+
+-> TEAM MEMBERS: MAKE A NEW TERMINAL TO RUN
+
+STEP 1 — INSTALL PYTHON
+
+Make sure Python is installed on your computer.
+Download it at: https://www.python.org/downloads/
+(Check "Add Python to PATH" during install on Windows)
+
+
+STEP 2 — INSTALL REQUIRED PACKAGES
+
+Open a terminal (or VS Code terminal) and run:
+
+    pip install flask flask-sqlalchemy
+
+If you get a greenlet error, also run:
+
+    pip install greenlet --only-binary=:all:
+
+If "pip" doesn't work, try "pip3" instead.
+
+STEP 3 — RUN THE APP
+
+Once you are inside the Deeprun_Performance_Center folder
+(you should see app.py listed if you type "dir"), run:
+
+    python app.py
+
+If "python" doesn't work, try:
+
+    python3 app.py

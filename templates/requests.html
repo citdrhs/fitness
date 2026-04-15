@@ -1,55 +1,37 @@
 {% extends "base.html" %}
-{% block title %}Requests — FitLife{% endblock %}
+{% block title %}Access Requests — Deeprun Performance Center{% endblock %}
 
 {% block content %}
-<section class="dash">
-  <div class="dash-head reveal">
+<div class="wrap">
+  <div class="page-head">
     <div>
-      <h2>Coach Access Requests</h2>
-      <p class="muted">Approve or deny pending coach accounts.</p>
+      <h2>Access Requests</h2>
+      <p>Accounts requesting elevated permissions</p>
     </div>
   </div>
 
-  <div class="panel reveal">
-    {% if pending %}
-      <div class="table-wrap">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Requested</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for u in pending %}
-              <tr>
-                <td>{{ u['username'] }}</td>
-                <td class="muted">{{ u['email'] }}</td>
-                <td>{{ u['role'] }}</td>
-                <td class="muted">{{ u['created_at'] }}</td>
-                <td class="actions">
-                  <form method="POST" action="{{ url_for('approve_request') }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <input type="hidden" name="user_id" value="{{ u['id'] }}">
-                    <button class="btn btn-sm" type="submit">Approve</button>
-                  </form>
-                  <form method="POST" action="{{ url_for('deny_request') }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <input type="hidden" name="user_id" value="{{ u['id'] }}">
-                    <button class="btn btn-sm danger" type="submit">Deny</button>
-                  </form>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+  {% if accounts %}
+    <div class="requests-list">
+      {% for account in accounts %}
+      <div class="request-item">
+        <div class="request-info">
+          <strong>{{ account.username }}</strong>
+          <span>{{ account.email }}</span>
+        </div>
+        <form method="POST" action="{{ url_for('elevateAccess') }}">
+          <button type="submit" name="ApproveButton" value="{{ account.username }}" class="btn ghost" style="font-size:0.75rem;padding:0.45rem 1rem;">
+            Approve
+          </button>
+        </form>
       </div>
-    {% else %}
-      <p class="muted">No pending requests.</p>
-    {% endif %}
-  </div>
-</section>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <div style="text-align:center;padding:4rem 2rem;color:var(--gray-2);">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:0.05em;color:var(--gray-3);margin-bottom:0.75rem;">All Clear</div>
+      <p style="font-size:0.9rem;">No pending access requests.</p>
+    </div>
+  {% endif %}
+</div>
 {% endblock %}
