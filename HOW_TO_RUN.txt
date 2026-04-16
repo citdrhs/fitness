@@ -27,3 +27,9 @@ Once you are inside the Deeprun_Performance_Center folder
 If "python" doesn't work, try:
 
     python3 app.py
+
+
+DOOLIDGE ADMIN PASSWORD:
+Username: Doolidge
+Email: rdoolidge@henrico.k12.va.us
+Password: WildcatStrong2024!

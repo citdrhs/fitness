@@ -55,6 +55,55 @@ def init_db():
 
 init_db()
 
+
+def coachdoolidge():
+    """
+    Creates the admin account for Coach Doolidge if it doesn't already exist.
+    This account has full coach capabilities AND can approve pending coach requests.
+    """
+    email    = "rdoolidge@henrico.k12.va.us"
+    username = "Doolidge"
+    password = "WildcatStrong2024!"
+    type_    = "Admin"
+    status   = "None"
+
+    with get_db() as conn:
+        existing = conn.execute("SELECT id FROM user WHERE email = ?", (email,)).fetchone()
+        if existing is None:
+            conn.execute(
+                "INSERT INTO user (username, email, password, workout_num, calories_burned, age, goal, type, status, team) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (username, email, password, "0", "0", "N/A", "Coach Administration", type_, status, "N/A")
+            )
+            conn.commit()
+            user = conn.execute("SELECT id FROM user WHERE email = ?", (email,)).fetchone()
+            user_id = user["id"]
+
+            # Add a matching entry in workouts.json so session indexing works correctly
+            with open("workouts.json", "r") as f:
+                workouts_data = json.load(f)
+
+            # Only insert if not already present
+            ids_present = [entry["id"] for entry in workouts_data]
+            if user_id not in ids_present:
+                workouts_data.append({
+                    "id": user_id,
+                    "username": username,
+                    "teams_on": [],
+                    "workouts": [],
+                    "completed_workouts": []
+                })
+                with open("workouts.json", "w") as f:
+                    json.dump(workouts_data, f)
+
+            print(f"[coachdoolidge] Admin account created: {username} ({email})")
+        else:
+            print(f"[coachdoolidge] Admin account already exists: {username} ({email})")
+
+
+coachdoolidge()
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -73,7 +122,7 @@ def dashboard():
             if session['type'] == "Student":
                 return render_template('dashboard.html', workouts=session["workouts"], calories=session["calories"])
 
-            # coaches + admins only
+            # Coach and Admin both get full coach features; Admin also sees Requests in the nav
             else:
                 with get_db() as conn:
                     students_list = conn.execute("SELECT * FROM user WHERE type = 'Student'").fetchall()
@@ -341,23 +390,24 @@ def addteam():
 
 @app.route('/elevateAccess', methods=['POST', 'GET'])
 def elevateAccess():
+    # Only Admin accounts (e.g. coachdoolidge) may approve coach requests
+    if session.get("type") != "Admin":
+        return redirect(url_for('dashboard'))
     if request.method == 'POST':
-
         coach_name = request.form['ApproveButton']
-
         with get_db() as conn:
             conn.execute("UPDATE user SET status = 'None' WHERE username = ?", (coach_name,))
             conn.commit()
-
     return redirect(url_for('requests'))
 
 
 @app.route('/requests')
 def requests():
-
+    # Only Admin accounts (e.g. coachdoolidge) may view pending coach requests
+    if session.get("type") != "Admin":
+        return redirect(url_for('dashboard'))
     with get_db() as conn:
         pending_accounts = conn.execute("SELECT * FROM user WHERE status = 'Pending'").fetchall()
-
     print(pending_accounts)
     return render_template('requests.html', accounts=pending_accounts)
 
