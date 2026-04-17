@@ -1,0 +1,20 @@
+Hello, I just wanted to document some of the changes I made so if anything isn't good for deployment, you can just remove it, as most of the changes I made was just so I could run the program:
+
+First, I wanted to mention how running app.py and then clicking "Go Live" redirected me to index.html (the one outside the templates folder), deleting it let me use test.html to access the website instead, but it seems like it restores itself automatically so not sure if this is a permanent solution
+
+The more important changes:
+
+line 76 in app.py was changed from "" to "" because I was getting a type error when trying to load the dashboard
+
+script.js (the one in the js folder) had a line updated which fixed the selectAll() bug, the selectAll() function is now reliant on the names of name attributes, rather than class attributes now, but this won't break anything because every user displayed on dashboard.html has their class and name attribute set to the same value
+
+I deleted a lot of information inside workouts.json because it was filled with test data which could prevent future users from signing up, if we need to update the contents of the database again, make sure workouts.json stays up to date because it won't update itself based on changes to the database automatically
+
+I deleted the home button because we don't need two of them
+
+ALSO, two things:
+
+It's not important anymore, but Doolidge's account information wasn't anywhere in the google drive or github so I had to make my own "give admin" button during testing (which I deleted)
+
+The website looks very black, not that that's bad, just I don't think that's what Coach Doolidge meant when he said "Deep Run colors" and "Facebook"
+

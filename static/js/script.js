@@ -4,11 +4,19 @@
 
 /* ─── Workout builder (Admin dashboard) ─── */
 function addWorkout() {
-  const workoutType = document.getElementById('workoutType')?.value;
+  let workoutType;
+  if (document.getElementById('workoutType')?.value !== 'Custom') {
+    workoutType = document.getElementById('workoutType')?.value;
+  } else {
+    workoutType = document.getElementById('Custom_Workout')?.value;
+  }
   const time        = document.getElementById('Time')?.value   || '';
   const weight      = document.getElementById('Weight')?.value || '';
   const reps        = document.getElementById('Reps')?.value   || '';
   const notes       = document.getElementById('Notes')?.value  || '';
+  const timestamp = Date.now();
+  const dated        = new Date(timestamp);
+  const date = dated.toLocaleDateString();
 
   if (!workoutType) return;
 
@@ -17,6 +25,7 @@ function addWorkout() {
   if (weight && weight !== '0') parts.push(`${weight} lbs`);
   if (reps   && reps   !== '0') parts.push(`${reps} reps`);
   if (notes  && notes  !== '0') parts.push(`<em>${notes}</em>`);
+  if (date  && date  !== '0') parts.push(`<em>${date}</em>`);
 
   const displayText = parts.join(' &middot; ');
   const id          = self.crypto.randomUUID();
@@ -31,12 +40,14 @@ function addWorkout() {
   container.appendChild(item);
 
   // Build a Python-literal dict string so ast.literal_eval works on the server
-  const workoutDict = `{'workoutType': '${workoutType.replace(/'/g,"\\'")}', 'time': '${time.replace(/'/g,"\\'")}', 'weight': '${weight.replace(/'/g,"\\'")}', 'reps': '${reps.replace(/'/g,"\\'")}', 'notes': '${notes.replace(/'/g,"\\'")}'}`;
+  const workoutDict = `{'workoutType': '${workoutType.replace(/'/g,"\\'")}', 'time': '${time.replace(/'/g,"\\'")}', 'weight': '${weight.replace(/'/g,"\\'")}', 'reps': '${reps.replace(/'/g,"\\'")}', 'notes': '${notes.replace(/'/g,"\\'")}', 'date':'${date.replace(/'/g,"\\'")}'}`;
   const hidden      = document.createElement('input');
   hidden.type       = 'hidden';
   hidden.name       = 'workouts';
   hidden.value      = workoutDict;
-  container.appendChild(hidden);
+  const formContainer = document.getElementById("addedWorkoutsHidden");
+  if (formContainer) formContainer.appendChild(hidden);
+  else container.appendChild(hidden);
 
   // Clear inputs
   ['Time','Weight','Reps','Notes'].forEach(f => {
@@ -60,7 +71,15 @@ function addTeamSlot() {
 
 /* ─── Admin: select-all athletes for a team ─── */
 function selectAll(team) {
-  document.querySelectorAll('.' + team).forEach(cb => { cb.checked = true; });
+  //I asked Gemini AI for help writing the line immediately below, me(Ayla) (and Tulsi?) still wrote most of it, but the dollar sign was Gemini's idea
+  document.querySelectorAll(`[name="${team}"]`).forEach(cb => { cb.checked = true; });
+}
+
+/* ─── Admin: view a student's workout log ─── */
+function viewInfo(student) {
+  
+  
+  
 }
 
 /* ─── Mark current nav link active ─── */

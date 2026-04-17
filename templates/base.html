@@ -19,19 +19,20 @@
     </div>
   </a>
 
-  <ul>
-    <li><a href="{{ url_for('index') }}">Home</a></li>
-    <li><a href="{{ url_for('communications') }}">Comms</a></li>
-    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-    <li><a href="{{ url_for('profile') }}">Profile</a></li>
-    {% if session.get("type") == "Admin" %}
-      <li><a href="{{ url_for('requests') }}">Requests</a></li>
-    {% endif %}
-    {% if "user" in session %}
-      <li><a href="{{ url_for('login') }}">Logout</a></li>
-    {% else %}
-      <li><a href="{{ url_for('login') }}">Login</a></li>
-    {% endif %}
+  <ul class="base-text">
+    
+      <li><a href="{{ url_for('communications') }}">Comms</a></li>
+      <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('profile') }}">Profile</a></li>
+      {% if session.get("type") == "Admin" %}
+        <li><a href="{{ url_for('requests') }}">Requests</a></li>
+      {% endif %}
+      {% if "user" in session %}
+        <li><a href="{{ url_for('login') }}">Logout</a></li>
+      {% else %}
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+      {% endif %}
+    
   </ul>
 </nav>
 

@@ -71,6 +71,7 @@
           <option value="Mountain Climbers">Mountain Climbers</option>
           <option value="Plank">Plank</option>
           <option value="Squats">Squats</option>
+          <option value="Custom">Custom</option>
         </select>
       </div>
       <div class="builder-field">
@@ -86,6 +87,7 @@
         <input type="number" id="Reps" name="Reps" placeholder="0">
       </div>
     </div>
+        <input type="text" id="Custom_Workout" name="Custom_Workout" placeholder="your workout">
 
     <div class="notes-row">
       <div class="builder-field" style="flex:1;">
@@ -103,7 +105,7 @@
     <div class="teams-section">
       <div class="section-title">Assign to Athletes</div>
 
-      {% for team in teams_list %}
+      {% for team in self_id %}
       <div class="team-block">
         <div class="team-block-head">
           <h3>{{ team }}</h3>
@@ -111,10 +113,15 @@
         </div>
         <div class="athlete-grid">
           {% for students in students_list %}
-            {% if team in workouts_json[students.id - 1]["teams_on"] %}
+            {% set student_entry = workouts_json | selectattr("username", "equalto", students.username) | first | default(None) %}
+            {% if student_entry and team in student_entry["teams_on"] %}
               <label class="athlete-chip">
                 <input type="checkbox" class="{{ team }}" name="{{ team }}" value="{{ students.username }}">
                 {{ students.username }}
+
+                <input type="hidden" name="logging_student" value="{{ students.username }}">
+                <button type="submit" class="athlete-chip" formaction="{{ url_for('log') }}">History</button> 
+
                 <span class="status-dot {% if students.status == 'active' %}active{% endif %}"></span>
               </label>
             {% endif %}
@@ -122,6 +129,7 @@
         </div>
       </div>
       {% endfor %}
+
     </div>
 
     <!-- Hidden workout inputs are appended here by JS -->
