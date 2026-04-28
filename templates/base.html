@@ -19,7 +19,11 @@
     </div>
   </a>
 
-  <ul class="base-text">
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <ul class="base-text" id="nav-menu">
     
       <li><a href="{{ url_for('communications') }}">Comms</a></li>
       <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>

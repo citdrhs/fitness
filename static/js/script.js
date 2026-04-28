@@ -1,4 +1,22 @@
 /* ================================================
+   MOBILE NAV HAMBURGER
+   ================================================ */
+const hamburger = document.getElementById("hamburger");
+const navMenu = document.getElementById("nav-menu");
+if (hamburger && navMenu) {
+  hamburger.addEventListener("click", () => {
+    hamburger.classList.toggle("open");
+    navMenu.classList.toggle("open");
+  });
+  navMenu.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      hamburger.classList.remove("open");
+      navMenu.classList.remove("open");
+    });
+  });
+}
+
+/* ================================================
    DEEPRUN PERFORMANCE CENTER — script.js
    ================================================ */
 
