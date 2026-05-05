@@ -115,12 +115,16 @@
           {% for students in students_list %}
             {% set student_entry = workouts_json | selectattr("username", "equalto", students.username) | first | default(None) %}
             {% if student_entry and team in student_entry["teams_on"] %}
+
+            
               <label class="athlete-chip">
+            
                 <input type="checkbox" class="{{ team }}" name="{{ team }}" value="{{ students.username }}">
                 {{ students.username }}
 
-                <input type="hidden" name="logging_student" value="{{ students.username }}">
-                <button type="submit" class="athlete-chip" formaction="{{ url_for('log') }}">History</button> 
+                <!--<input type="hidden" name="logging_student" value="{{ students.username }}">-->
+               
+                <button type="submit" name="logging_student" value="{{ students.username }}" class="athlete-chip" formaction="{{ url_for('log') }}">History</button>
 
                 <span class="status-dot {% if students.status == 'active' %}active{% endif %}"></span>
               </label>
